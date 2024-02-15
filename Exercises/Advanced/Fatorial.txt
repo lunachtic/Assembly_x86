@@ -1,0 +1,99 @@
+Código Fatorial criado por mim:
+1  - .model small
+
+2  - .stack 100H   ; define uma pilha de 256 bytes (100H)
+
+3  - .data 
+4  - ; Não há dados!    
+5  - .code  
+6  - ; Escreve na tela um caractere armazenado em DL     
+7  - ESC_CHAR proc
+8  -    push AX    ; salvar o reg AX
+9  -    mov AH, 2
+10 -    int 21H
+11 -    pop AX     ; restaurar o reg AX
+12 -    ret  
+13 - endp   
+
+14 - ; Escreve na tela um inteiro sem sinal    
+15 - ; de 16 bits armazenado no registrador AX
+16 - ESC_UINT16 proc 
+17 -    push AX      ; Salvar registradores utilizados na proc
+18 -    push BX
+19 -    push CX
+20 -    push DX 
+       
+21 -    mov BX, 10   ; divisões sucessivas por 10
+22 -    xor CX, CX   ; contador de dígitos
+      
+23 - LACO_DIV:
+24 -    xor DX, DX   ; zerar DX pois o dividendo é DXAX
+25 -    div BX       ; divisão para separar o dígito em DX
+    
+26 -    push DX      ; empilhar o dígito
+27 -    inc CX       ; incrementa o contador de dígitos
+     
+28 -    cmp AX, 0    ; AX chegou a 0?
+29 -    jnz LACO_DIV ; enquanto AX diferente de 0 salte para LACO_DIV
+           
+30 - LACO_ESCDIG:   
+31 -    pop DX       ; desempilha o dígito    
+32 -    add DL, '0'  ; converter o dígito para ASCII
+33 -    call ESC_CHAR               
+34 -    loop LACO_ESCDIG ; decrementa o contador de dígitos
+35 -    pop DX       ; Restaurar registradores utilizados na proc
+36 -    pop CX
+37 -    pop BX
+38 -    pop AX
+39 -    ret     
+40 - endp  
+
+41 - ; Escreve na tela um inteiro COM sinal    
+42 - ; de 16 bits armazenado no registrador AX
+43 - ESC_INT16 proc 
+44 -    push AX         
+45 -    cmp AX, 0 ; Se AX < 0, SF = 1
+46 -    jns ESCREVE_NUMERO
+47 -    ; Escrever o sinal de menos
+48 -    mov DL, '-'    
+49 -    call ESC_CHAR 
+50 -    neg AX ; Inverte o sinal 
+
+51 - ESCREVE_NUMERO:
+52 -    call ESC_UINT16
+53 -    pop AX   
+54 -    ret
+55 - endp    
+       
+
+56 - FATORIAL proc 
+57 -    push CX  
+       
+58 -    mov CX, AX ; Setar CX com o contador inicial ; (como fara 5 * 4 * 3..., o primeiro número que multiplicará será o próprio AX (5)
+59 -    mov AX, 1 
+
+60 -    cmp CX, 0     ; se for fatorial de 0, resultado e 1, e não entra no laco
+61 -    je FIM_FATORIAL  
+    
+62 - LACO_FATORIAL:    
+63 -    mul CX   
+64 -    loop LACO_FATORIAL
+
+68 - FIM_FATORIAL:
+69 -    pop CX 
+70 -    ret
+80 - endp 
+    
+81 - INICIO:   
+82 -    ; Configuração do DS
+83 -    mov AX, @DATA
+84 -    mov DS, AX 
+             
+85 -    mov AX, 5  ; numero   que será feito o fatorial       
+86 -    call FATORIAL   
+87 -    call ESC_INT16 
+     
+88 -    ; Finalização do programa
+89 -    mov ah, 4ch   
+90 -    int 21h    
+91 -    end INICIO         
