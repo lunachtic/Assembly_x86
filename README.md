@@ -15,8 +15,4 @@ The repository is organized as follows:
 - 📁 **Resources**
   - In this section, you'll have access to a wide range of helpful resources for learning x86 Assembly. This includes links to online tutorials, recommended books, instruction references, and simulation tools.
 
-## Disclaimer
-
-Remember that x86 Assembly can be challenging at first, but it's a valuable skill for understanding processor internals and computing systems. Feel free to explore the projects, practice the exercises, and utilize the resources available in this repository to strengthen your understanding.
-
-**Enjoy learning and exploring the world of x86 Assembly language and computer architecture!**
+**Learning and exploring the world of x86 Assembly language and computer architecture!**
